@@ -1,10 +1,21 @@
+drop table if exists `recipy_category`;
+drop table if exists `categories`;
+drop table if exists `great`;
+drop table if exists `comments`;
+drop table if exists `images`;
+drop table if exists `recipe_ingredient`;
+drop table if exists `ingredients`;
+drop table if exists `recipes`;
+drop table if exists `members`;
+drop table if exists `grades`;
+
 CREATE TABLE `members` (
-                           `id`	bigint	NOT NULL,
-                           `login_id`	varchar(32)	NULL,
+                           `id`	bigint	NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                           `login_id`	varchar(32)	NULL UNIQUE,
                            `password`	varchar(256)	NULL,
                            `sign_up_date`	date	NULL,
                            `ban`	boolean	NULL	DEFAULT false,
-                           `ban_reason`	varchar(256)	NOT NULL,
+                           `ban_reason`	varchar(256),
                            `boolean`	boolean	NULL	DEFAULT false,
                            `grade_id`	bigint	NOT NULL
 );
@@ -22,8 +33,8 @@ CREATE TABLE `recipes` (
 );
 
 CREATE TABLE `grades` (
-                          `id`	bigint	NOT NULL,
-                          `등급명`	varchar(32)	NULL
+                          `id`	bigint	NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                          `name`	varchar(32)	NULL
 );
 
 CREATE TABLE `ingredients` (
@@ -69,16 +80,8 @@ CREATE TABLE `recipy_category` (
                                    `category_id`	bigint	NOT NULL
 );
 
-ALTER TABLE `members` ADD CONSTRAINT `PK_MEMBERS` PRIMARY KEY (
-                                                               `id`
-    );
-
 ALTER TABLE `recipes` ADD CONSTRAINT `PK_RECIPES` PRIMARY KEY (
                                                                `id`
-    );
-
-ALTER TABLE `grades` ADD CONSTRAINT `PK_GRADES` PRIMARY KEY (
-                                                             `id`
     );
 
 ALTER TABLE `ingredients` ADD CONSTRAINT `PK_INGREDIENTS` PRIMARY KEY (
