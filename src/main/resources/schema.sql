@@ -12,11 +12,11 @@ drop table if exists `grades`;
 CREATE TABLE `members` (
                            `id`	bigint	NOT NULL PRIMARY KEY AUTO_INCREMENT,
                            `login_id`	varchar(32)	NULL UNIQUE,
-                           `password`	varchar(256)	NULL,
-                           `sign_up_date`	date	NULL,
+                           `password`	varchar(256)	NOT NULL ,
+                           `sign_up_date`	date	NOT NULL ,
                            `ban`	boolean	NULL	DEFAULT false,
                            `ban_reason`	varchar(256),
-                           `boolean`	boolean	NULL	DEFAULT false,
+                           `secession`	boolean	NULL	DEFAULT false,
                            `grade_id`	bigint	NOT NULL
 );
 

@@ -1,5 +1,9 @@
 package com.coockcoock.shop.member.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import java.time.LocalDate;
 
 /**
@@ -8,6 +12,8 @@ import java.time.LocalDate;
  * @version 1.0
  * @since 23-03-25
  */
+@Getter
+@AllArgsConstructor
 public class UpdateMemberResponseDto {
     private LocalDate updateDate;
 }

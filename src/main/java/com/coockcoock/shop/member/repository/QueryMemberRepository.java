@@ -1,5 +1,9 @@
 package com.coockcoock.shop.member.repository;
 
+import com.coockcoock.shop.member.domain.Member;
+
+import java.util.Optional;
+
 /**
  * 회원 조회 관련 Repository 인터페이스
  *
@@ -16,4 +20,13 @@ public interface QueryMemberRepository {
      * @since 23-03-25
      */
     boolean existsLoginId(String LoginId);
+
+    /**
+     * 로그인 아이디로 회원을 찾는 메서드
+     *
+     * @param loginId 찾을 회원의 로그인 아이디
+     * @return 해당 loginId 회원
+     * @since 23-04-15
+     */
+    Optional<Member> findMemberByLoginId(String loginId);
 }

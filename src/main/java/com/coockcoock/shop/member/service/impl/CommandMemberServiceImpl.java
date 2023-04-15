@@ -6,12 +6,14 @@ import com.coockcoock.shop.member.dto.CreateMemberRequestDto;
 import com.coockcoock.shop.member.dto.CreateMemberResponseDto;
 import com.coockcoock.shop.member.dto.UpdateMemberRequestDto;
 import com.coockcoock.shop.member.dto.UpdateMemberResponseDto;
+import com.coockcoock.shop.member.exception.MemberNotFoundException;
 import com.coockcoock.shop.member.repository.CommonMemberRepository;
 import com.coockcoock.shop.member.repository.impl.QueryDslMemberRepository;
 import com.coockcoock.shop.member.service.CommandMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.security.auth.login.LoginException;
 import java.time.LocalDate;
@@ -33,6 +35,7 @@ public class CommandMemberServiceImpl implements CommandMemberService{
      * {@inheritDoc}
      */
     @Override
+    @Transactional
     public CreateMemberResponseDto create(CreateMemberRequestDto requestDto) throws LoginException {
         if(queryDslMemberRepository.existsLoginId(requestDto.getLoginId())) {
             throw new LoginException(requestDto.getLoginId());
@@ -51,18 +54,23 @@ public class CommandMemberServiceImpl implements CommandMemberService{
      * {@inheritDoc}
      */
     @Override
+    @Transactional
     public UpdateMemberResponseDto update(UpdateMemberRequestDto requestDto) throws LoginException {
         if(queryDslMemberRepository.existsLoginId(requestDto.getLoginId())) {
             throw new LoginException(requestDto.getLoginId());
         }
+        Member member = queryDslMemberRepository.findMemberByLoginId(requestDto.getLoginId())
+                .orElseThrow(() -> new MemberNotFoundException("LoginId: " + requestDto.getLoginId()));
 
-        return null;
+        member.changePassword(passwordEncoder.encode(requestDto.getPassword()));
+        return new UpdateMemberResponseDto(LocalDate.now());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
+    @Transactional
     public void logicalDelete(String loginId) {
 
     }

@@ -1,5 +1,6 @@
 package com.coockcoock.shop.member.repository.impl;
 
+import com.coockcoock.shop.member.domain.Member;
 import com.coockcoock.shop.member.domain.querydsl.QMember;
 import com.coockcoock.shop.member.repository.QueryMemberRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -29,5 +30,15 @@ public class QueryDslMemberRepository implements QueryMemberRepository {
         return Optional
                 .ofNullable(queryFactory.selectFrom(member).where(member.loginId.eq(loginId)).fetchFirst())
                 .isPresent();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<Member> findMemberByLoginId(String loginId) {
+        QMember member = QMember.member;
+
+        return Optional.of(queryFactory.selectFrom(member).where(member.loginId.eq(loginId)).fetchFirst());
     }
 }
