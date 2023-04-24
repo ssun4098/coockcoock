@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.security.auth.login.LoginException;
 import java.time.LocalDate;
 
 /**
@@ -34,7 +33,7 @@ public class CommandMemberServiceImpl implements CommandMemberService{
      */
     @Override
     @Transactional
-    public CreateMemberResponseDto create(CreateMemberRequestDto requestDto) throws LoginException {
+    public CreateMemberResponseDto create(CreateMemberRequestDto requestDto) {
         if(queryDslMemberRepository.existsLoginId(requestDto.getLoginId())) {
             throw new LoginIdExistsException(requestDto.getLoginId());
         }

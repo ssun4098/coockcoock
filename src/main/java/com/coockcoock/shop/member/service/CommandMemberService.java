@@ -2,8 +2,6 @@ package com.coockcoock.shop.member.service;
 
 import com.coockcoock.shop.member.dto.*;
 
-import javax.security.auth.login.LoginException;
-
 /**
  * 회원 생성, 업데이터, 삭제 Service 인터페이스
  *
@@ -19,7 +17,7 @@ public interface CommandMemberService {
      * @return 회원 생성 응답 dto(생성 날짜)
      * @since 23-03-25
      */
-    CreateMemberResponseDto create(CreateMemberRequestDto requestDto) throws LoginException;
+    CreateMemberResponseDto create(CreateMemberRequestDto requestDto);
 
     /**
      * 회원 업데이터 메서드
@@ -27,7 +25,7 @@ public interface CommandMemberService {
      * @param requestDto 회원 업데이트 요청 dto
      * @return 회원 업데이트 응답 dto
      */
-    UpdateMemberResponseDto update(UpdateMemberRequestDto requestDto) throws LoginException;
+    UpdateMemberResponseDto update(UpdateMemberRequestDto requestDto);
 
     /**
      * LoginId를 이용한 논리적 회원 삭제

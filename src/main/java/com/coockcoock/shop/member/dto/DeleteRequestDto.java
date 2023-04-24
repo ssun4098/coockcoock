@@ -8,23 +8,17 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * 회원 생성 요청 Dto
+ * 회원 삭제 Request DTO
  *
- * @version 1.0
- * @since 23-03-25
+ * @since 23-04-24
  */
-@AllArgsConstructor
 @Getter
-public class CreateMemberRequestDto {
+@AllArgsConstructor
+public class DeleteRequestDto {
+
     @NotNull
     @NotBlank
     @Size(min = 2, message = "로그인 아이디가 너무 짧습니다.")
     @Size(max = 12, message = "로그인 아이디는 최대 12자까지 허용합니다.")
     private String loginId;
-
-    @NotNull
-    @NotBlank
-    @Size(min = 2, message = "비밀번호가 너무 짧습니다.")
-    @Size(max = 12, message = "비밀번호는 최대 12자까지 허용합니다.")
-    private String password;
 }

@@ -20,6 +20,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((auth) -> {
             auth.antMatchers("/h2-console/**").permitAll();
+            auth.antMatchers("/v1/members/duplicability").permitAll();
         });
 
         http.csrf().disable();
