@@ -28,7 +28,9 @@ public class QueryDslMemberRepository implements QueryMemberRepository {
         QMember member = QMember.member;
 
         return Optional
-                .ofNullable(queryFactory.selectFrom(member).where(member.loginId.eq(loginId)).fetchFirst())
+                .ofNullable(queryFactory.selectFrom(member)
+                        .where(member.loginId.eq(loginId).and(member.withdrawal.isFalse()))
+                        .fetchFirst())
                 .isPresent();
     }
 
@@ -39,6 +41,8 @@ public class QueryDslMemberRepository implements QueryMemberRepository {
     public Optional<Member> findMemberByLoginId(String loginId) {
         QMember member = QMember.member;
 
-        return Optional.of(queryFactory.selectFrom(member).where(member.loginId.eq(loginId)).fetchFirst());
+        return Optional.ofNullable(queryFactory.selectFrom(member)
+                .where(member.loginId.eq(loginId).and(member.withdrawal.isFalse()))
+                .fetchFirst());
     }
 }

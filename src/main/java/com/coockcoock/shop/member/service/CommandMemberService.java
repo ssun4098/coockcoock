@@ -1,9 +1,6 @@
 package com.coockcoock.shop.member.service;
 
-import com.coockcoock.shop.member.dto.CreateMemberRequestDto;
-import com.coockcoock.shop.member.dto.CreateMemberResponseDto;
-import com.coockcoock.shop.member.dto.UpdateMemberRequestDto;
-import com.coockcoock.shop.member.dto.UpdateMemberResponseDto;
+import com.coockcoock.shop.member.dto.*;
 
 import javax.security.auth.login.LoginException;
 
@@ -39,4 +36,13 @@ public interface CommandMemberService {
      * @since 23-03-25
      */
     void logicalDelete(String loginId);
+
+    /**
+     * 로그인 아이디 중복 확인 메서드
+     *
+     * @param loginId 확인할 loginId
+     * @return 중복 여부 DTO
+     * @since 23-04-24
+     */
+    CheckLoginIdResponseDto checkLoginId(String loginId);
 }
