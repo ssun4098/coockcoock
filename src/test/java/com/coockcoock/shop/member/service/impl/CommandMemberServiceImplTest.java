@@ -6,6 +6,7 @@ import com.coockcoock.shop.member.exception.LoginIdExistsException;
 import com.coockcoock.shop.member.exception.MemberNotFoundException;
 import com.coockcoock.shop.member.repository.CommonMemberRepository;
 import com.coockcoock.shop.member.repository.impl.QueryDslMemberRepository;
+import com.coockcoock.shop.utils.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,7 @@ class CommandMemberServiceImplTest {
     private QueryDslMemberRepository queryDslMemberRepository;
     private CreateMemberRequestDto createMemberRequestDto;
     private UpdateMemberRequestDto updateMemberRequestDto;
+    private JwtUtil jwtUtil;
     private Member member = Member.builder()
             .loginId("loginId")
             .password("password")
@@ -43,7 +45,8 @@ class CommandMemberServiceImplTest {
         commonMemberRepository = Mockito.mock(CommonMemberRepository.class);
         queryDslMemberRepository = Mockito.mock(QueryDslMemberRepository.class);
         PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
-        commandMemberService = new CommandMemberServiceImpl(commonMemberRepository, queryDslMemberRepository, passwordEncoder);
+        jwtUtil = Mockito.mock(JwtUtil.class);
+        commandMemberService = new CommandMemberServiceImpl(commonMemberRepository, queryDslMemberRepository, passwordEncoder, jwtUtil);
         createMemberRequestDto = new CreateMemberRequestDto("loginId", "password");
         updateMemberRequestDto = new UpdateMemberRequestDto("loginId", "password");
     }

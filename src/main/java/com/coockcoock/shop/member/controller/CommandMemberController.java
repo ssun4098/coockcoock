@@ -68,4 +68,16 @@ public class CommandMemberController {
     public void logicDelete(@Valid DeleteRequestDto requestDto) {
         commandMemberService.logicalDelete(requestDto.getLoginId());
     }
+
+    /**
+     * 로그인 메서드
+     *
+     * @param requestDto 로그인 요청 DTO
+     * @return JWT Token
+     * @since 24-04-28
+     */
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@Valid @RequestBody LoginRequestDto requestDto) {
+        return ResponseEntity.ok(commandMemberService.login(requestDto));
+    }
 }

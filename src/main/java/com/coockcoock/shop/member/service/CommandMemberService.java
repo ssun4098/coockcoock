@@ -43,4 +43,13 @@ public interface CommandMemberService {
      * @since 23-04-24
      */
     CheckLoginIdResponseDto checkLoginId(String loginId);
+
+    /**
+     * 로그인 메서드
+     *
+     * @param requestDto 로그인 요청 DTO
+     * @return JWT 토큰
+     * @since 23-04-28
+     */
+    String login(LoginRequestDto requestDto);
 }

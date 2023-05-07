@@ -1,2 +1,2 @@
-insert into grades(`name`) values ('default');
+insert into grades(`name`) values ('DEFAULT');
 insert into grades(`name`) values ('manager');
