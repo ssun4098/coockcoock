@@ -40,7 +40,23 @@ public class Member {
     @Column(name = "ban_reason", length = 256)
     private String banReason;
 
+    @Column(name = "withdrawal")
+    private boolean withdrawal;
+
     @ManyToOne
     @JoinColumn(name = "grade_id")
     private Grade grade;
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public void logicDelete() {
+        this.loginId = "";
+        this.password = "";
+        this.signUpDate = null;
+        this.ban = false;
+        this.banReason = "";
+        this.withdrawal = true;
+    }
 }

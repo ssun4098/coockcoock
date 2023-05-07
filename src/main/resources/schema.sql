@@ -11,19 +11,19 @@ drop table if exists `grades`;
 
 CREATE TABLE `members` (
                            `id`	bigint	NOT NULL PRIMARY KEY AUTO_INCREMENT,
-                           `login_id`	varchar(32)	NULL UNIQUE,
-                           `password`	varchar(256)	NULL,
-                           `sign_up_date`	date	NULL,
-                           `ban`	boolean	NULL	DEFAULT false,
+                           `login_id`	varchar(32)	NOT NULL UNIQUE,
+                           `password`	varchar(256)	NOT NULL ,
+                           `sign_up_date`	date	NOT NULL ,
+                           `ban`	boolean	NOT NULL	DEFAULT false,
                            `ban_reason`	varchar(256),
-                           `boolean`	boolean	NULL	DEFAULT false,
+                           `withdrawal`	boolean	NOT NULL	DEFAULT false,
                            `grade_id`	bigint	NOT NULL
 );
 
 CREATE TABLE `recipes` (
                            `id`	bigint	NOT NULL,
-                           `title`	varchar(256)	NULL,
-                           `cookery`	varchar(1024)	NULL,
+                           `title`	varchar(256)	NOT NULL,
+                           `cookery`	varchar(1024)	NOT NULL,
                            `write_date`	date	NULL,
                            `score`	integer	NULL	DEFAULT 0,
                            `create_datetime`	datetime	NULL,
