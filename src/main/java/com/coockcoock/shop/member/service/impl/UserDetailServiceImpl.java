@@ -5,8 +5,10 @@ import com.coockcoock.shop.member.domain.Member;
 import com.coockcoock.shop.member.exception.MemberNotFoundException;
 import com.coockcoock.shop.member.repository.CommonMemberRepository;
 import com.coockcoock.shop.member.repository.QueryMemberRepository;
+import com.coockcoock.shop.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,6 +24,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
     private final QueryMemberRepository queryMemberRepository;
+    private final RedisTemplate<String, String> redisTemplate;
+    private final JwtUtil jwtUtil;
 
     /**
      * 입력한 loginId를 가진 회원을 찾는 메서드

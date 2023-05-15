@@ -11,11 +11,15 @@ import com.coockcoock.shop.member.repository.QueryMemberRepository;
 import com.coockcoock.shop.member.service.CommandMemberService;
 import com.coockcoock.shop.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.Cookie;
 import java.time.LocalDate;
+import java.util.concurrent.TimeUnit;
 
 /**
  *  * 회원 생성, 업데이터, 삭제 Service 구현체
@@ -28,6 +32,7 @@ import java.time.LocalDate;
 public class CommandMemberServiceImpl implements CommandMemberService{
     private final CommonMemberRepository commonMemberRepository;
     private final QueryMemberRepository queryMemberRepository;
+    private final RedisTemplate<String, String> redisTemplate;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
@@ -90,7 +95,19 @@ public class CommandMemberServiceImpl implements CommandMemberService{
         Member member = queryMemberRepository.findMemberByLoginId(requestDto.getLoginId())
                 .orElseThrow(() -> new MemberNotFoundException("LoginId: " + requestDto.getLoginId()));
         passwordCheck(member, requestDto.getPassword());
+        redisTemplate.opsForValue().set(requestDto.getLoginId() + " Refresh Token", jwtUtil.refreshToken(member));
+        redisTemplate.expire(requestDto.getLoginId(), 6, TimeUnit.HOURS);
         return jwtUtil.creatJwt(member);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void logout(String loginId, Cookie cookie) {
+        redisTemplate.delete(loginId + " Refresh Token");
+        redisTemplate.opsForValue().set(loginId + " Access Token", cookie.getValue());
+        redisTemplate.expire(loginId + " Access Token", 6, TimeUnit.HOURS);
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.coockcoock.shop.config;
 
+import com.coockcoock.shop.filter.JwtExceptionFilter;
 import com.coockcoock.shop.filter.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -22,11 +23,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
+    private final JwtExceptionFilter jwtExceptionFilter;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((auth) -> {
             auth.antMatchers("/h2-console/**").permitAll();
-            auth.antMatchers("/v1/members/*").permitAll();
+            auth.antMatchers("/v1/members/**").permitAll();
             auth.antMatchers("/test/*").hasRole("DEFAULT");
         });
 
@@ -36,6 +38,7 @@ public class SecurityConfig {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtExceptionFilter, JwtFilter.class);
 
         return http.build();
     }

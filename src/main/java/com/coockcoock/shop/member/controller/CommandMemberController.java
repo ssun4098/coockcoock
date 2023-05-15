@@ -2,11 +2,16 @@ package com.coockcoock.shop.member.controller;
 
 import com.coockcoock.shop.member.dto.*;
 import com.coockcoock.shop.member.service.CommandMemberService;
+import com.coockcoock.shop.utils.CookieUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 /**
@@ -15,11 +20,13 @@ import javax.validation.Valid;
  * @since 23-04-24
  * @version 1.0
  */
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/v1/members")
 public class CommandMemberController {
     private final CommandMemberService commandMemberService;
+    private final CookieUtil cookieUtil;
 
     /**
      * 회원 로그인 아이디 중복 여부 확인 메서드
@@ -70,14 +77,19 @@ public class CommandMemberController {
     }
 
     /**
-     * 로그인 메서드
+     * 로그인 메서드 JWT AccessToken을 Cookie에 담아서 전달
      *
      * @param requestDto 로그인 요청 DTO
-     * @return JWT Token
-     * @since 24-04-28
+     * @since 24-05-15
      */
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequestDto requestDto) {
-        return ResponseEntity.ok(commandMemberService.login(requestDto));
+    public void login(@Valid @RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
+        response.addCookie(cookieUtil.createCookie("AccessToken", commandMemberService.login(requestDto)));
+    }
+
+    @DeleteMapping("/logout")
+    public void logout(@RequestParam String loginId, @CookieValue(value = "AccessToken")Cookie cookie) {
+        log.info("logout member: {}", loginId);
+        commandMemberService.logout(loginId, cookie);
     }
 }

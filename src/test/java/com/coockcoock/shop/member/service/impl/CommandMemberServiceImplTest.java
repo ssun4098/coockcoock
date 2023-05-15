@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -32,6 +33,7 @@ class CommandMemberServiceImplTest {
     private CommandMemberServiceImpl commandMemberService;
     private CommonMemberRepository commonMemberRepository;
     private QueryDslMemberRepository queryDslMemberRepository;
+    private RedisTemplate redisTemplate;
     private CreateMemberRequestDto createMemberRequestDto;
     private UpdateMemberRequestDto updateMemberRequestDto;
     private JwtUtil jwtUtil;
@@ -44,9 +46,10 @@ class CommandMemberServiceImplTest {
     void setUp() {
         commonMemberRepository = Mockito.mock(CommonMemberRepository.class);
         queryDslMemberRepository = Mockito.mock(QueryDslMemberRepository.class);
+        redisTemplate = Mockito.mock(RedisTemplate.class);
         PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
         jwtUtil = Mockito.mock(JwtUtil.class);
-        commandMemberService = new CommandMemberServiceImpl(commonMemberRepository, queryDslMemberRepository, passwordEncoder, jwtUtil);
+        commandMemberService = new CommandMemberServiceImpl(commonMemberRepository, queryDslMemberRepository, redisTemplate,  passwordEncoder, jwtUtil);
         createMemberRequestDto = new CreateMemberRequestDto("loginId", "password");
         updateMemberRequestDto = new UpdateMemberRequestDto("loginId", "password");
     }

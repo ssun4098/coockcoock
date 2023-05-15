@@ -2,6 +2,8 @@ package com.coockcoock.shop.member.service;
 
 import com.coockcoock.shop.member.dto.*;
 
+import javax.servlet.http.Cookie;
+
 /**
  * 회원 생성, 업데이터, 삭제 Service 인터페이스
  *
@@ -52,4 +54,13 @@ public interface CommandMemberService {
      * @since 23-04-28
      */
     String login(LoginRequestDto requestDto);
+
+    /**
+     * 로그아웃 메서드
+     * Refresh 토큰 삭제와 기존 토큰은 블랙리스트에 추가한다.
+     *
+     * @param loginId 로그아웃할 LoginId
+     * @since 23-05-15
+     */
+    void logout(String loginId, Cookie cookie);
 }

@@ -23,7 +23,7 @@ public class RedisTest {
         valueOperations.set(key, "hello");
 
         // then
-        String value = valueOperations.get(key);
+        String value = valueOperations.getAndDelete(key);
         assertThat(value).isEqualTo("hello");
     }
 }
