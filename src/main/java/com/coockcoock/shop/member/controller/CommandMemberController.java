@@ -1,16 +1,15 @@
 package com.coockcoock.shop.member.controller;
 
+import com.coockcoock.shop.common.dto.CommonResponseDto;
 import com.coockcoock.shop.member.dto.*;
 import com.coockcoock.shop.member.service.CommandMemberService;
-import com.coockcoock.shop.utils.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -26,7 +25,6 @@ import javax.validation.Valid;
 @RequestMapping("/v1/members")
 public class CommandMemberController {
     private final CommandMemberService commandMemberService;
-    private final CookieUtil cookieUtil;
 
     /**
      * 회원 로그인 아이디 중복 여부 확인 메서드
@@ -36,8 +34,12 @@ public class CommandMemberController {
      * @since 24-04-24
      */
     @GetMapping("/duplicability")
-    public ResponseEntity<CheckLoginIdResponseDto> checkLoginId(@Valid CheckLoginIdRequestDto requestDto) {
-        return new ResponseEntity<>(commandMemberService.checkLoginId(requestDto.getLoginId()), HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public CommonResponseDto<CheckLoginIdResponseDto> checkLoginId(@Valid CheckLoginIdRequestDto requestDto) {
+        return CommonResponseDto.<CheckLoginIdResponseDto>builder()
+                .success(true)
+                .data(commandMemberService.checkLoginId(requestDto.getLoginId()))
+                .build();
     }
 
     /**
@@ -48,8 +50,12 @@ public class CommandMemberController {
      * @since 24-04-24
      */
     @PostMapping
-    public ResponseEntity<CreateMemberResponseDto> createMember(@Valid @RequestBody CreateMemberRequestDto requestDto) {
-        return new ResponseEntity<>(commandMemberService.create(requestDto), HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public CommonResponseDto<CreateMemberResponseDto> createMember(@Valid @RequestBody CreateMemberRequestDto requestDto) {
+        return CommonResponseDto.<CreateMemberResponseDto>builder()
+                .success(true)
+                .data(commandMemberService.create(requestDto))
+                .build();
     }
 
     /**
@@ -60,8 +66,12 @@ public class CommandMemberController {
      * @since 24-04-24
      */
     @PutMapping
-    public ResponseEntity<UpdateMemberResponseDto> updateMEmber(@Valid @RequestBody UpdateMemberRequestDto requestDto) {
-        return new ResponseEntity<>(commandMemberService.update(requestDto), HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public CommonResponseDto<UpdateMemberResponseDto> updateMEmber(@Valid @RequestBody UpdateMemberRequestDto requestDto) {
+        return CommonResponseDto.<UpdateMemberResponseDto>builder()
+                .success(true)
+                .data(commandMemberService.update(requestDto))
+                .build();
     }
 
     /**
@@ -83,13 +93,15 @@ public class CommandMemberController {
      * @since 24-05-15
      */
     @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
     public void login(@Valid @RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
-        response.addCookie(cookieUtil.createCookie("AccessToken", commandMemberService.login(requestDto)));
+//        response.addCookie(cookieUtil.createCookie("AccessToken", commandMemberService.login(requestDto)));
     }
 
     @DeleteMapping("/logout")
-    public void logout(@RequestParam String loginId, @CookieValue(value = "AccessToken")Cookie cookie) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void logout(@RequestParam String loginId, HttpServletRequest request) {
         log.info("logout member: {}", loginId);
-        commandMemberService.logout(loginId, cookie);
+        commandMemberService.logout(loginId, request.getHeader(HttpHeaders.AUTHORIZATION));
     }
 }

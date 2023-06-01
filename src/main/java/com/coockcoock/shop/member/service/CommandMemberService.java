@@ -62,5 +62,13 @@ public interface CommandMemberService {
      * @param loginId 로그아웃할 LoginId
      * @since 23-05-15
      */
-    void logout(String loginId, Cookie cookie);
+    void logout(String loginId, String token);
+
+    /**
+     * JWT Token 블랙리스트를 확인하는 메서드
+     *
+     * @param token 확인할 토큰
+     * @return If Token exists True else False
+     */
+    boolean checkBlackList(String token);
 }

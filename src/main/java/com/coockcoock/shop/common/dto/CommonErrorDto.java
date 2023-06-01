@@ -1,4 +1,4 @@
-package com.coockcoock.shop.common;
+package com.coockcoock.shop.common.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

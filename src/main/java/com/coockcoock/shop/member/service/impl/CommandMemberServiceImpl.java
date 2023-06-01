@@ -11,6 +11,7 @@ import com.coockcoock.shop.member.repository.QueryMemberRepository;
 import com.coockcoock.shop.member.service.CommandMemberService;
 import com.coockcoock.shop.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,7 +36,8 @@ public class CommandMemberServiceImpl implements CommandMemberService{
     private final RedisTemplate<String, String> redisTemplate;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-
+    @Value("${jwt.refreshKey}")
+    private String refreshTokenKey;
     /**
      * {@inheritDoc}
      */
@@ -95,8 +97,8 @@ public class CommandMemberServiceImpl implements CommandMemberService{
         Member member = queryMemberRepository.findMemberByLoginId(requestDto.getLoginId())
                 .orElseThrow(() -> new MemberNotFoundException("LoginId: " + requestDto.getLoginId()));
         passwordCheck(member, requestDto.getPassword());
-        redisTemplate.opsForValue().set(requestDto.getLoginId() + " Refresh Token", jwtUtil.refreshToken(member));
-        redisTemplate.expire(requestDto.getLoginId(), 6, TimeUnit.HOURS);
+        redisTemplate.opsForValue().set(requestDto.getLoginId() + " " + refreshTokenKey, jwtUtil.refreshToken(member));
+        redisTemplate.expire(requestDto.getLoginId() + " " + refreshTokenKey, 6, TimeUnit.HOURS);
         return jwtUtil.creatJwt(member);
     }
 
@@ -104,10 +106,18 @@ public class CommandMemberServiceImpl implements CommandMemberService{
      * {@inheritDoc}
      */
     @Override
-    public void logout(String loginId, Cookie cookie) {
-        redisTemplate.delete(loginId + " Refresh Token");
-        redisTemplate.opsForValue().set(loginId + " Access Token", cookie.getValue());
-        redisTemplate.expire(loginId + " Access Token", 6, TimeUnit.HOURS);
+    public void logout(String loginId, String token) {
+        redisTemplate.delete(loginId + " " + refreshTokenKey);
+        redisTemplate.opsForValue().set(token, loginId);
+        redisTemplate.expire(token, 6, TimeUnit.HOURS);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean checkBlackList(String token) {
+        return Boolean.TRUE.equals(redisTemplate.hasKey(token));
     }
 
     /**

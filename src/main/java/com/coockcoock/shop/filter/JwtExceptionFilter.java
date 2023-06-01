@@ -1,7 +1,7 @@
 package com.coockcoock.shop.filter;
 
 
-import com.coockcoock.shop.member.exception.LoginException;
+import com.coockcoock.shop.member.exception.LoginTokenBlackListExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try{
           filterChain.doFilter(request, response);
-        } catch (LoginException e) {
+        } catch (LoginTokenBlackListExistsException e) {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
             response.getWriter().write("Please Re Login.");
         }

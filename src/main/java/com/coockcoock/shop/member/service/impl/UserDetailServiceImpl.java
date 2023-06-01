@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 public class UserDetailServiceImpl implements UserDetailsService {
     private final QueryMemberRepository queryMemberRepository;
     private final RedisTemplate<String, String> redisTemplate;
-    private final JwtUtil jwtUtil;
 
     /**
      * 입력한 loginId를 가진 회원을 찾는 메서드
