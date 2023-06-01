@@ -16,8 +16,11 @@ on:
 
 jobs:
   build:
+  permissions:
+    contents: 'read'
+    id-token: 'write
 
-    runs-on: ubuntu-latest
+  runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
