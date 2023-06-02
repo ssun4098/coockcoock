@@ -1,4 +1,4 @@
-drop table if exists `recipy_category`;
+drop table if exists `recipe_category`;
 drop table if exists `categories`;
 drop table if exists `write`;
 drop table if exists `comments`;
@@ -23,7 +23,6 @@ CREATE TABLE `members` (
     `id`	bigint	NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `login_id`	varchar(32)	NOT NULL UNIQUE,
     `password`	varchar(256)	NOT NULL ,
-    `email` varchar(32) NOT NULL UNIQUE,
     `sign_up_date`	date	NOT NULL ,
     `ban`	boolean	NOT NULL	DEFAULT false,
     `ban_reason`	varchar(256),
