@@ -13,12 +13,10 @@ import com.coockcoock.shop.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.Cookie;
 import java.time.LocalDate;
 import java.util.concurrent.TimeUnit;
 
@@ -93,13 +91,13 @@ public class CommandMemberServiceImpl implements CommandMemberService{
      * {@inheritDoc}
      */
     @Override
-    public String login(LoginRequestDto requestDto) {
+    public LoginResponseDto login(LoginRequestDto requestDto) {
         Member member = queryMemberRepository.findMemberByLoginId(requestDto.getLoginId())
                 .orElseThrow(() -> new MemberNotFoundException("LoginId: " + requestDto.getLoginId()));
         passwordCheck(member, requestDto.getPassword());
         redisTemplate.opsForValue().set(requestDto.getLoginId() + " " + refreshTokenKey, jwtUtil.refreshToken(member));
         redisTemplate.expire(requestDto.getLoginId() + " " + refreshTokenKey, 6, TimeUnit.HOURS);
-        return jwtUtil.creatJwt(member);
+        return new LoginResponseDto(jwtUtil.creatJwt(member));
     }
 
     /**

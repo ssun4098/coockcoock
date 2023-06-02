@@ -53,7 +53,7 @@ public interface CommandMemberService {
      * @return JWT 토큰
      * @since 23-04-28
      */
-    String login(LoginRequestDto requestDto);
+    LoginResponseDto login(LoginRequestDto requestDto);
 
     /**
      * 로그아웃 메서드

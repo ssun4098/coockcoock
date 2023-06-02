@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 /**
@@ -94,8 +93,11 @@ public class CommandMemberController {
      */
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public void login(@Valid @RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
-//        response.addCookie(cookieUtil.createCookie("AccessToken", commandMemberService.login(requestDto)));
+    public CommonResponseDto<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto requestDto) {
+        return CommonResponseDto.<LoginResponseDto>builder()
+                .success(true)
+                .data(commandMemberService.login(requestDto))
+                .build();
     }
 
     @DeleteMapping("/logout")
