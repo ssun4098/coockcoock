@@ -64,7 +64,7 @@ public class JwtFilter extends OncePerRequestFilter {
      */
     private void checkExpired(String token) {
         if(jwtUtil.isExpired(token)) {
-            throw new JwtExpiredException();
+            throw new JwtExpiredException("Token Expired: " + token);
         }
     }
 }

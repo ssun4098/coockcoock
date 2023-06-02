@@ -38,7 +38,7 @@ public class ErrorAdvice {
      * 400 Error Handler 메서드
      *
      * @param e 에러 정보가 담긴 객체
-     * @return Http Status 404 && ErrorMessage1
+     * @return Http Status 404 && ErrorMessage
      */
     @ExceptionHandler(value = {LoginIdExistsException.class, PasswordNotMatchException.class, LoginTokenBlackListExistsException.class})
     public CommonResponseDto<?> badRequest(Exception e) {
