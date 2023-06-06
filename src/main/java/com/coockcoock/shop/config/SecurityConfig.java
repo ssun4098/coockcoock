@@ -28,7 +28,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests((auth) -> {
             auth.antMatchers("/h2-console/**").permitAll();
             auth.antMatchers("/v1/members/**").permitAll();
-            auth.antMatchers("/test/*").hasRole("DEFAULT");
+            auth.antMatchers("/v1/ingredients/*").hasAnyRole("default", "manager");
         });
 
         http.csrf().disable();
