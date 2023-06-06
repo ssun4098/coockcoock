@@ -1,8 +1,7 @@
 package com.coockcoock.shop.ingredient.repository;
 
 import com.coockcoock.shop.ingredient.entity.Ingredient;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
@@ -41,7 +40,7 @@ class IngredientRepositoryTest {
         commandIngredientRepository.save(ingredient);
 
         //when
-        commandIngredientRepository.deleteById(1L);
+        commandIngredientRepository.deleteById(2L);
         List<Ingredient> result = commandIngredientRepository.findAll();
 
         //then
