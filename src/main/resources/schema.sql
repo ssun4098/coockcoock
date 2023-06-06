@@ -34,10 +34,9 @@ CREATE TABLE `recipes` (
     `id`	bigint	NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `title`	varchar(256)	NOT NULL,
     `cookery`	varchar(1024)	NOT NULL,
-    `write_date`	date	NULL,
-    `score`	integer	NULL	DEFAULT 0,
-    `create_datetime`	datetime	NULL,
-    `update_datetime`	datetime	NOT NULL,
+    `score`	double precision	NULL	DEFAULT 0,
+    `create_at`	datetime	NULL,
+    `update_at`	datetime	NOT NULL,
     `delete`	boolean	NULL
 );
 

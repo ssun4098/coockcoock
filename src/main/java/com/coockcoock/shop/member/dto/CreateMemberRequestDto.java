@@ -2,6 +2,7 @@ package com.coockcoock.shop.member.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -13,6 +14,7 @@ import javax.validation.constraints.Size;
  * @version 1.0
  * @since 23-03-25
  */
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 public class CreateMemberRequestDto {

@@ -2,8 +2,6 @@ package com.coockcoock.shop.member.controller;
 
 import com.coockcoock.shop.member.dto.*;
 import com.coockcoock.shop.member.service.CommandMemberService;
-import com.coockcoock.shop.utils.CookieUtil;
-import com.coockcoock.shop.utils.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
