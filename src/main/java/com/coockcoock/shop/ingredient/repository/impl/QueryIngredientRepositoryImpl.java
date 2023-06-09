@@ -1,6 +1,5 @@
 package com.coockcoock.shop.ingredient.repository.impl;
 
-import com.coockcoock.shop.ingredient.dto.IngredientFindResponseDto;
 import com.coockcoock.shop.ingredient.entity.Ingredient;
 import com.coockcoock.shop.ingredient.entity.querydsl.QIngredient;
 import com.coockcoock.shop.ingredient.repository.QueryIngredientRepository;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Repository
@@ -33,8 +31,6 @@ public class QueryIngredientRepositoryImpl implements QueryIngredientRepository 
         if(Objects.nonNull(name)) {
             builder.and(ingredient.name.contains(name));
         }
-        System.out.println(pageable.getOffset());
-        System.out.println(pageable.getPageSize());
         List<Ingredient> ingredients = jpaQueryFactory
                 .selectFrom(ingredient)
                 .where(builder)

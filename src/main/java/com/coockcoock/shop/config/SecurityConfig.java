@@ -28,10 +28,11 @@ public class SecurityConfig {
         http.authorizeHttpRequests((auth) -> {
             auth.antMatchers("/h2-console/**").permitAll();
             auth.antMatchers("/v1/members/**").permitAll();
-            auth.antMatchers("/v1/ingredients/*").hasAnyRole("default", "manager");
+           // auth.antMatchers("/v1/ingredients/**").hasAnyRole("default", "manager");
         });
 
         http.csrf().disable();
+        http.cors().disable();
         http.headers().frameOptions().disable();
         http.formLogin().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
