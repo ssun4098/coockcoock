@@ -1,12 +1,17 @@
 package com.coockcoock.shop.member.domain;
 
+import com.coockcoock.shop.recipe.entity.Recipe;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 회원 테이블 Entity
@@ -18,6 +23,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "members")
 @Entity
 public class Member {
@@ -31,6 +37,7 @@ public class Member {
     @Column(name = "password", length = 256)
     private String password;
 
+    @CreatedDate
     @Column(name = "sign_up_date")
     private LocalDate signUpDate;
 
@@ -46,6 +53,9 @@ public class Member {
     @ManyToOne
     @JoinColumn(name = "grade_id")
     private Grade grade;
+
+    @OneToMany(mappedBy = "member")
+    private List<Recipe> recipes = new ArrayList<>();
 
     public void changePassword(String password) {
         this.password = password;

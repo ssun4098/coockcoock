@@ -1,5 +1,6 @@
 package com.coockcoock.shop.recipe.entity;
 
+import com.coockcoock.shop.member.domain.Member;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -30,9 +31,6 @@ public class Recipe {
     @Column(name = "cookery", length = 1024)
     private String cookery;
 
-    @Column(name = "score")
-    private double score;
-
     @Column(name = "delete")
     private boolean delete;
 
@@ -43,4 +41,8 @@ public class Recipe {
     @LastModifiedDate
     @Column(name = "update_at")
     private LocalDateTime updatedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "writer_id")
+    private Member member;
 }

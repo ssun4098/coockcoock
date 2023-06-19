@@ -38,7 +38,12 @@ public class QueryIngredientRepositoryImpl implements QueryIngredientRepository 
                 .offset(pageable.getOffset())
                 .fetch();
 
-        return new PageImpl<>(ingredients, pageable, ingredients.size());
+        Long size = jpaQueryFactory
+                .select(ingredient.count())
+                .from(ingredient)
+                .fetchOne();
+
+        return new PageImpl<>(ingredients, pageable, size.longValue());
     }
 
     /**

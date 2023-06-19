@@ -45,12 +45,10 @@ public class CommandMemberServiceImpl implements CommandMemberService{
         if(queryMemberRepository.existsLoginId(requestDto.getLoginId())) {
             throw new LoginIdExistsException(requestDto.getLoginId());
         }
-        LocalDate signUpDate = LocalDate.now();
         commonMemberRepository.save(
                 Member.builder()
                         .loginId(requestDto.getLoginId())
                         .password(passwordEncoder.encode(requestDto.getPassword()))
-                        .signUpDate(signUpDate)
                         .grade(new Grade(1L, "DEFAULT")).build());
         return new CreateMemberResponseDto(LocalDate.now());
     }

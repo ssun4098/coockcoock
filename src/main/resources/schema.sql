@@ -1,13 +1,12 @@
 drop table if exists `recipe_category`;
 drop table if exists `categories`;
-drop table if exists `write`;
 drop table if exists `comments`;
 drop table if exists `images`;
 drop table if exists `recipe_ingredient`;
+drop table if exists `recipes`;
 drop table if exists `ingredients`;
 drop table if exists `members`;
 drop table if exists `grades`;
-drop table if exists `recipes`;
 
 CREATE TABLE `grades` (
     `id`	bigint	NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -27,7 +26,9 @@ CREATE TABLE `members` (
     `ban`	boolean	NOT NULL	DEFAULT false,
     `ban_reason`	varchar(256),
     `withdrawal`	boolean	NOT NULL	DEFAULT false,
-    `grade_id`	bigint	NOT NULL
+    `grade_id`	bigint	NOT NULL,
+    foreign key (grade_id)
+    references grades(id)
 );
 
 CREATE TABLE `recipes` (
@@ -37,17 +38,19 @@ CREATE TABLE `recipes` (
     `score`	double precision	NULL	DEFAULT 0,
     `create_at`	datetime	NULL,
     `update_at`	datetime	NOT NULL,
-    `delete`	boolean	NULL
+    `delete`	boolean	NULL,
+    `writer_id`    bigint NOT NULL,
+    CONSTRAINT 'test'
+    foreign key (writer_id)
+    REFERENCES members(id)
 );
 
 CREATE TABLE `recipe_ingredient` (
     `ingredient_id`	bigint	NOT NULL,
     `recipe_id`	bigint	NOT NULL,
     `amount`	varchar(32)	NULL,
-    CONSTRAINT `mm_recipe`
     foreign key (recipe_id)
     REFERENCES recipes(id),
-    CONSTRAINT `mm_ingredient`
     foreign key (ingredient_id)
     REFERENCES ingredients(id)
 );
@@ -56,7 +59,6 @@ CREATE TABLE `images` (
     `id`	bigint	NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `name`	VARCHAR(255)	NULL,
     `recipe_id`	bigint	NOT NULL,
-    CONSTRAINT `image_recipe`
     foreign key (recipe_id)
     REFERENCES recipes(id)
 );
@@ -75,17 +77,6 @@ CREATE TABLE `comments` (
     REFERENCES members(id),
     foreign key (comment_id)
     REFERENCES comments(id)
-);
-
-CREATE TABLE `write` (
-    `member_id`	bigint	NOT NULL,
-    `recipe_id`	bigint	NOT NULL,
-    CONSTRAINT `write_recipe`
-    foreign key (recipe_id)
-    REFERENCES recipes(id),
-    CONSTRAINT `write_member`
-    foreign key (member_id)
-    REFERENCES members(id)
 );
 
 CREATE TABLE `categories` (
