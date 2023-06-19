@@ -26,9 +26,7 @@ CREATE TABLE `members` (
     `ban`	boolean	NOT NULL	DEFAULT false,
     `ban_reason`	varchar(256),
     `withdrawal`	boolean	NOT NULL	DEFAULT false,
-    `grade_id`	bigint	NOT NULL,
-    foreign key (grade_id)
-    references grades(id)
+    `grade_id`	bigint	NOT NULL
 );
 
 CREATE TABLE `recipes` (
@@ -39,10 +37,7 @@ CREATE TABLE `recipes` (
     `create_at`	datetime	NULL,
     `update_at`	datetime	NOT NULL,
     `delete`	boolean	NULL,
-    `writer_id`    bigint NOT NULL,
-    CONSTRAINT 'test'
-    foreign key (writer_id)
-    REFERENCES members(id)
+    `writer_id`    bigint NOT NULL
 );
 
 CREATE TABLE `recipe_ingredient` (
