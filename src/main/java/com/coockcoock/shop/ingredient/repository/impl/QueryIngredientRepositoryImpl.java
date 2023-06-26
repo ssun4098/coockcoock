@@ -58,4 +58,12 @@ public class QueryIngredientRepositoryImpl implements QueryIngredientRepository 
                 .stream()
                 .findFirst();
     }
+
+    @Override
+    public List<Ingredient> findsById(List<Long> ids) {
+        QIngredient ingredient = QIngredient.ingredient;
+        return jpaQueryFactory.selectFrom(ingredient)
+                .where(ingredient.id.in(ids))
+                .fetch();
+    }
 }

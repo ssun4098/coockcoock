@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -35,5 +36,10 @@ public class QueryIngredientServiceImpl implements QueryIngredientService {
                 pageable,
                 ingredients.getTotalElements()
         );
+    }
+
+    @Override
+    public List<Ingredient> findsById(List<Long> ids) {
+        return queryIngredientRepository.findsById(ids);
     }
 }

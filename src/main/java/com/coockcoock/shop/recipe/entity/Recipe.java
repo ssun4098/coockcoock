@@ -7,6 +7,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
+@Table(name = "recipes")
 @Entity
 public class Recipe {
     @Id
@@ -31,11 +33,11 @@ public class Recipe {
     @Column(name = "cookery", length = 1024)
     private String cookery;
 
-    @Column(name = "delete")
-    private boolean delete;
+    @Column(name = "is_delete")
+    private boolean isDelete;
 
     @CreatedDate
-    @Column(name = "create_at", updatable = false)
+    @Column(name = "create_at")
     private LocalDateTime createdAt;
 
     @LastModifiedDate

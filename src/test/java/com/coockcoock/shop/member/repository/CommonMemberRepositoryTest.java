@@ -32,5 +32,6 @@ class CommonMemberRepositoryTest {
         Member result = commonMemberRepository.save(member);
 
         assertThat(result.getLoginId()).isEqualTo(member.getLoginId());
+
     }
 }

@@ -4,6 +4,7 @@ import com.coockcoock.shop.ingredient.entity.Ingredient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -28,4 +29,12 @@ public interface QueryIngredientRepository {
      * @return 결과
      */
     Optional<Ingredient> findById(Long id);
+
+    /**
+     * 아이디 리스트로 조회하는 메소드
+     *
+     * @param ids 조회할 id 리스트
+     * @return 조회된 아이디 리스트
+     */
+    List<Ingredient> findsById(List<Long> ids);
 }

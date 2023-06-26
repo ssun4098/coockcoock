@@ -27,4 +27,5 @@ public class RecipeCreateRequestDto {
     private String loginId;
     private MultipartFile[] upLoadFile;
     private List<Long> ingredientList;
+    private List<String> amounts;
 }

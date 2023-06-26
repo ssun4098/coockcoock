@@ -1,5 +1,7 @@
 package com.coockcoock.shop.recipe.service.impl;
 
+import com.coockcoock.shop.foodIngredient.service.FoodIngredientService;
+import com.coockcoock.shop.ingredient.service.QueryIngredientService;
 import com.coockcoock.shop.member.domain.Member;
 import com.coockcoock.shop.member.exception.MemberNotFoundException;
 import com.coockcoock.shop.member.repository.QueryMemberRepository;
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Service;
 public class RecipeServiceImpl implements RecipeService {
     private final RecipeRepository recipeRepository;
     private final QueryMemberRepository queryMemberRepository;
+    private final QueryIngredientService queryIngredientService;
+    private final FoodIngredientService foodIngredientService;
 
     /**
      * {@inheritDoc}
@@ -33,6 +37,8 @@ public class RecipeServiceImpl implements RecipeService {
                 .build();
 
         recipeRepository.save(recipe);
+
+        foodIngredientService.save(recipe, queryIngredientService.findsById(requestDto.getIngredientList()), requestDto.getAmounts());
 
         return null;
     }
