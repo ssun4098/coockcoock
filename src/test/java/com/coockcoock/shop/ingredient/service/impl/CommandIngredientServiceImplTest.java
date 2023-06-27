@@ -1,5 +1,6 @@
 package com.coockcoock.shop.ingredient.service.impl;
 
+import com.coockcoock.shop.foodIngredient.service.FoodIngredientService;
 import com.coockcoock.shop.ingredient.dto.IngredientCreateRequestDto;
 import com.coockcoock.shop.ingredient.dto.IngredientDeleteRequestDto;
 import com.coockcoock.shop.ingredient.repository.CommandIngredientRepository;
@@ -15,11 +16,13 @@ import static org.mockito.Mockito.verify;
 class CommandIngredientServiceImplTest {
     private CommandIngredientServiceImpl commandIngredientService;
     private CommandIngredientRepository commandIngredientRepository;
+    private FoodIngredientService foodIngredientService;
 
     @BeforeEach
     void setUp() {
         commandIngredientRepository = Mockito.mock(CommandIngredientRepository.class);
-        commandIngredientService = new CommandIngredientServiceImpl(commandIngredientRepository);
+        foodIngredientService = Mockito.mock(FoodIngredientService.class);
+        commandIngredientService = new CommandIngredientServiceImpl(commandIngredientRepository, foodIngredientService);
     }
 
     @Test
@@ -46,5 +49,6 @@ class CommandIngredientServiceImplTest {
 
         //then
         verify(commandIngredientRepository, atLeastOnce()).deleteById(1L);
+        verify(foodIngredientService, atLeastOnce()).deleteByIngredientId(1L);
     }
 }

@@ -2,6 +2,7 @@ package com.coockcoock.shop.recipe.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
@@ -14,6 +15,7 @@ import java.util.List;
  * @since 23-06-03
  */
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class RecipeCreateRequestDto {
     @NotNull
@@ -22,9 +24,6 @@ public class RecipeCreateRequestDto {
     @NotNull
     @NotBlank
     private String cookery;
-    @NotNull
-    @NotBlank
-    private String loginId;
     private MultipartFile[] upLoadFile;
     private List<Long> ingredientList;
     private List<String> amounts;

@@ -23,6 +23,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "members")
 @Entity
 public class Member {
@@ -36,6 +37,7 @@ public class Member {
     @Column(name = "password", length = 256)
     private String password;
 
+    @CreatedDate
     @Column(name = "sign_up_date")
     private LocalDate signUpDate;
 

@@ -7,8 +7,10 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
-public class RecipeCreateResponseDto {
-    private LocalDateTime createAt;
+@NoArgsConstructor
+public class RecipeFindResponseDto {
+    String title;
+    String writer;
+    LocalDateTime createAt;
 }

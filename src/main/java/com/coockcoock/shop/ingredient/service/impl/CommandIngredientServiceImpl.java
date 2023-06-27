@@ -1,5 +1,6 @@
 package com.coockcoock.shop.ingredient.service.impl;
 
+import com.coockcoock.shop.foodIngredient.service.FoodIngredientService;
 import com.coockcoock.shop.ingredient.dto.IngredientCreateRequestDto;
 import com.coockcoock.shop.ingredient.dto.IngredientCreateResponseDto;
 import com.coockcoock.shop.ingredient.dto.IngredientDeleteRequestDto;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @Service
 public class CommandIngredientServiceImpl implements CommandIngredientService {
     private final CommandIngredientRepository commandIngredientRepository;
+    private final FoodIngredientService foodIngredientService;
 
     /**
      * {@inheritDoc}
@@ -32,6 +34,7 @@ public class CommandIngredientServiceImpl implements CommandIngredientService {
      */
     @Override
     public void deleteById(IngredientDeleteRequestDto requestDto) {
+        foodIngredientService.deleteByIngredientId(requestDto.getId());
         commandIngredientRepository.deleteById(requestDto.getId());
     }
 }

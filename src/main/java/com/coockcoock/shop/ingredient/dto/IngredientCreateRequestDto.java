@@ -15,5 +15,4 @@ public class IngredientCreateRequestDto {
     @NotNull
     @NotBlank
     private String name;
-
 }
