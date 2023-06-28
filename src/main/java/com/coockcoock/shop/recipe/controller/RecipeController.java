@@ -21,8 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 public class RecipeController {
     private final RecipeService recipeService;
 
-    @PostMapping
-    public CommonResponseDto<RecipeCreateResponseDto> create(@RequestBody RecipeCreateRequestDto requestDto, HttpServletRequest request) {
+    @PostMapping(consumes = {"multipart/form-data"})
+    public CommonResponseDto<RecipeCreateResponseDto> create(@RequestPart RecipeCreateRequestDto requestDto, HttpServletRequest request) {
         return CommonResponseDto.<RecipeCreateResponseDto>builder()
                 .success(true)
                 .data(recipeService.create(requestDto, request.getHeader(HttpHeaders.AUTHORIZATION)))

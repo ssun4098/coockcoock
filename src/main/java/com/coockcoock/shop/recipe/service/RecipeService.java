@@ -10,11 +10,20 @@ import org.springframework.data.domain.Pageable;
 /**
  * 게시물 서비스 인터페이스
  *
- * @since 23-06-03
+ * @since 23-06-28
  */
 public interface RecipeService {
 
+    /**
+     * 게시물 생성 메서드
+     *
+     * @param requestDto
+     * @param token
+     * @return
+     */
     RecipeCreateResponseDto create(RecipeCreateRequestDto requestDto, String token);
 
     Page<RecipeFindResponseDto> findsRecipe(RecipeListRequestDto requestDto, Pageable pageable);
+
+
 }

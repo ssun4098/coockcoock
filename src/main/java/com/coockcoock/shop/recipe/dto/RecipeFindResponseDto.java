@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RecipeFindResponseDto {
+    Long id;
     String title;
     String writer;
     LocalDateTime createAt;

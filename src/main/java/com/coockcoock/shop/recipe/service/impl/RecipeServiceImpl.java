@@ -16,10 +16,14 @@ import com.coockcoock.shop.recipe.service.RecipeService;
 import com.coockcoock.shop.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -31,6 +35,8 @@ public class RecipeServiceImpl implements RecipeService {
     private final FoodIngredientService foodIngredientService;
     private final QueryRecipeRepository queryRecipeRepository;
     private final JwtUtil jwtUtil;
+    @Value("${file.path}")
+    private String path;
 
     /**
      * {@inheritDoc}
@@ -52,6 +58,9 @@ public class RecipeServiceImpl implements RecipeService {
 
         foodIngredientService.save(recipe, queryIngredientService.findsById(requestDto.getIngredientList()), requestDto.getAmounts());
 
+        if(requestDto.getUpLoadFile().length > 0) {
+            saveFile(requestDto.getUpLoadFile(), recipe.getId());
+        }
         return new RecipeCreateResponseDto(recipe.getCreatedAt());
     }
 
@@ -59,6 +68,21 @@ public class RecipeServiceImpl implements RecipeService {
     @Transactional(readOnly = true)
     public Page<RecipeFindResponseDto> findsRecipe(RecipeListRequestDto requestDto, Pageable pageable) {
         return queryRecipeRepository.findsByName(requestDto.getTitle(), pageable)
-                .map(recipe -> new RecipeFindResponseDto(recipe.getTitle(), recipe.getMember().getLoginId(), recipe.getCreatedAt()));
+                .map(recipe ->
+                        new RecipeFindResponseDto(recipe.getId(), recipe.getTitle(), recipe.getMember().getLoginId(), recipe.getCreatedAt()));
+    }
+
+    private void saveFile(MultipartFile[] multipartFiles, Long id) {
+        File uploadFolder = new File(path, id.toString());
+        if(!uploadFolder.exists()) {
+            uploadFolder.mkdirs();
+        }
+        for(MultipartFile uploadFile: multipartFiles) {
+            try {
+                uploadFile.transferTo(uploadFolder);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
