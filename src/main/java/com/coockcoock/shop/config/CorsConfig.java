@@ -20,14 +20,17 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
 
                 registry.addMapping("/**")
-                        .allowedOrigins(front)
+                        .allowedOrigins("*")
                         .allowedMethods(
                                 HttpMethod.GET.name(),
                                 HttpMethod.HEAD.name(),
                                 HttpMethod.POST.name(),
                                 HttpMethod.PUT.name(),
-                                HttpMethod.DELETE.name()
-                        );
+                                HttpMethod.DELETE.name(),
+                                HttpMethod.OPTIONS.name()
+                        )
+                        .allowedHeaders("*")
+                        .maxAge(3600);
             }
         };
     }

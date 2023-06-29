@@ -15,7 +15,6 @@ import java.util.List;
  * @since 23-06-03
  */
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class RecipeCreateRequestDto {
     @NotNull
@@ -24,7 +23,7 @@ public class RecipeCreateRequestDto {
     @NotNull
     @NotBlank
     private String cookery;
-    private MultipartFile[] upLoadFile;
+    private List<MultipartFile> upLoadFile;
     private List<Long> ingredientList;
     private List<String> amounts;
 }

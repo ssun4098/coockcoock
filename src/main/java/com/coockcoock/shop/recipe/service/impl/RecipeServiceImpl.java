@@ -24,6 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -56,9 +60,11 @@ public class RecipeServiceImpl implements RecipeService {
 
         recipeRepository.save(recipe);
 
-        foodIngredientService.save(recipe, queryIngredientService.findsById(requestDto.getIngredientList()), requestDto.getAmounts());
+        if(Objects.nonNull(requestDto.getIngredientList())) {
+            foodIngredientService.save(recipe, queryIngredientService.findsById(requestDto.getIngredientList()), requestDto.getAmounts());
+        }
 
-        if(requestDto.getUpLoadFile().length > 0) {
+        if(Objects.nonNull(requestDto.getUpLoadFile()) && requestDto.getUpLoadFile().size() > 0) {
             saveFile(requestDto.getUpLoadFile(), recipe.getId());
         }
         return new RecipeCreateResponseDto(recipe.getCreatedAt());
@@ -72,16 +78,22 @@ public class RecipeServiceImpl implements RecipeService {
                         new RecipeFindResponseDto(recipe.getId(), recipe.getTitle(), recipe.getMember().getLoginId(), recipe.getCreatedAt()));
     }
 
-    private void saveFile(MultipartFile[] multipartFiles, Long id) {
+    private void saveFile(List<MultipartFile> multipartFiles, Long id) {
         File uploadFolder = new File(path, id.toString());
         if(!uploadFolder.exists()) {
             uploadFolder.mkdirs();
         }
         for(MultipartFile uploadFile: multipartFiles) {
-            try {
-                uploadFile.transferTo(uploadFolder);
-            } catch (Exception e) {
-                e.printStackTrace();
+            log.info("fileName: {}", uploadFile.getOriginalFilename());
+            if(!uploadFile.getContentType().startsWith("image")) {
+                String originalName = uploadFile.getOriginalFilename();
+                String fileName = originalName.substring(originalName.lastIndexOf("\\") + 1);
+                Path savePath = Paths.get(path + "_" + fileName);
+                try {
+                    uploadFile.transferTo(savePath);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
