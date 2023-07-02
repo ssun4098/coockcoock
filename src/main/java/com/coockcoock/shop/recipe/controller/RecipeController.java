@@ -34,7 +34,7 @@ public class RecipeController {
     }
 
     @GetMapping
-    public CommonResponseDto<Page<RecipeFindResponseDto>> find(@RequestBody RecipeListRequestDto requestDto, @PageableDefault Pageable pageable) {
+    public CommonResponseDto<Page<RecipeFindResponseDto>> find(RecipeListRequestDto requestDto, @PageableDefault Pageable pageable) {
         return CommonResponseDto.<Page<RecipeFindResponseDto>>builder()
                 .success(true)
                 .data((recipeService.findsRecipe(requestDto, pageable)))

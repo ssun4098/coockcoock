@@ -85,7 +85,7 @@ public class RecipeServiceImpl implements RecipeService {
         }
         for(MultipartFile uploadFile: multipartFiles) {
             log.info("fileName: {}", uploadFile.getOriginalFilename());
-            if(!uploadFile.getContentType().startsWith("image")) {
+            if(!Objects.requireNonNull(uploadFile.getContentType()).startsWith("image")) {
                 String originalName = uploadFile.getOriginalFilename();
                 String fileName = originalName.substring(originalName.lastIndexOf("\\") + 1);
                 Path savePath = Paths.get(path + "_" + fileName);
