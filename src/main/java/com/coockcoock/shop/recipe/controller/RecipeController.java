@@ -1,10 +1,7 @@
 package com.coockcoock.shop.recipe.controller;
 
 import com.coockcoock.shop.common.dto.CommonResponseDto;
-import com.coockcoock.shop.recipe.dto.RecipeCreateRequestDto;
-import com.coockcoock.shop.recipe.dto.RecipeCreateResponseDto;
-import com.coockcoock.shop.recipe.dto.RecipeFindResponseDto;
-import com.coockcoock.shop.recipe.dto.RecipeListRequestDto;
+import com.coockcoock.shop.recipe.dto.*;
 import com.coockcoock.shop.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +22,6 @@ public class RecipeController {
 
     @PostMapping
     public CommonResponseDto<RecipeCreateResponseDto> create(@ModelAttribute RecipeCreateRequestDto requestDto, HttpServletRequest request) {
-        log.info("title: {}", requestDto.getTitle());
-        log.info("cookery: {}", requestDto.getCookery());
         return CommonResponseDto.<RecipeCreateResponseDto>builder()
                 .success(true)
                 .data(recipeService.create(requestDto, request.getHeader(HttpHeaders.AUTHORIZATION)))
@@ -34,10 +29,19 @@ public class RecipeController {
     }
 
     @GetMapping
-    public CommonResponseDto<Page<RecipeFindResponseDto>> find(RecipeListRequestDto requestDto, @PageableDefault Pageable pageable) {
+    public CommonResponseDto<Page<RecipeFindResponseDto>> finds(RecipeListRequestDto requestDto, @PageableDefault Pageable pageable) {
         return CommonResponseDto.<Page<RecipeFindResponseDto>>builder()
                 .success(true)
                 .data((recipeService.findsRecipe(requestDto, pageable)))
+                .build();
+    }
+
+    @GetMapping("/{id}")
+    public CommonResponseDto<RecipeDetailResponseDto> find(@PathVariable(name = "id")Long id) {
+        return CommonResponseDto.<RecipeDetailResponseDto>builder()
+                .success(true)
+                .data(recipeService.findRecipeById(id))
+                .errorDto(null)
                 .build();
     }
 }

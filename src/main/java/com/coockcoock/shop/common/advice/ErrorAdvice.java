@@ -6,6 +6,7 @@ import com.coockcoock.shop.member.exception.LoginTokenBlackListExistsException;
 import com.coockcoock.shop.member.exception.LoginIdExistsException;
 import com.coockcoock.shop.member.exception.MemberNotFoundException;
 import com.coockcoock.shop.member.exception.PasswordNotMatchException;
+import com.coockcoock.shop.recipe.exception.RecipeNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -23,7 +24,7 @@ public class ErrorAdvice {
      * @param e 에러 정보가 담긴 객체
      * @return Http Status: 404 && ErrorMessage
      */
-    @ExceptionHandler(value = {MemberNotFoundException.class})
+    @ExceptionHandler(value = {MemberNotFoundException.class, RecipeNotFoundException.class})
     public CommonResponseDto<?> notFound(Exception e) {
         return CommonResponseDto.builder()
                 .success(false)

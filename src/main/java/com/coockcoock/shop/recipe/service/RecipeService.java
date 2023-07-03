@@ -1,9 +1,6 @@
 package com.coockcoock.shop.recipe.service;
 
-import com.coockcoock.shop.recipe.dto.RecipeCreateResponseDto;
-import com.coockcoock.shop.recipe.dto.RecipeCreateRequestDto;
-import com.coockcoock.shop.recipe.dto.RecipeListRequestDto;
-import com.coockcoock.shop.recipe.dto.RecipeFindResponseDto;
+import com.coockcoock.shop.recipe.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -23,7 +20,15 @@ public interface RecipeService {
      */
     RecipeCreateResponseDto create(RecipeCreateRequestDto requestDto, String token);
 
+    /**
+     * 게시물 리스트 반환
+     *
+     * @param requestDto 찾는 게시물의 제목
+     * @param pageable 페이지 정보
+     * @return 찾은 게시물 리스트
+     */
     Page<RecipeFindResponseDto> findsRecipe(RecipeListRequestDto requestDto, Pageable pageable);
 
 
+    RecipeDetailResponseDto findRecipeById(Long id);
 }

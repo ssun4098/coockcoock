@@ -5,11 +5,9 @@ import com.coockcoock.shop.ingredient.service.QueryIngredientService;
 import com.coockcoock.shop.member.domain.Member;
 import com.coockcoock.shop.member.exception.MemberNotFoundException;
 import com.coockcoock.shop.member.repository.QueryMemberRepository;
-import com.coockcoock.shop.recipe.dto.RecipeCreateRequestDto;
-import com.coockcoock.shop.recipe.dto.RecipeCreateResponseDto;
-import com.coockcoock.shop.recipe.dto.RecipeListRequestDto;
-import com.coockcoock.shop.recipe.dto.RecipeFindResponseDto;
+import com.coockcoock.shop.recipe.dto.*;
 import com.coockcoock.shop.recipe.entity.Recipe;
+import com.coockcoock.shop.recipe.exception.RecipeNotFoundException;
 import com.coockcoock.shop.recipe.repository.QueryRecipeRepository;
 import com.coockcoock.shop.recipe.repository.RecipeRepository;
 import com.coockcoock.shop.recipe.service.RecipeService;
@@ -21,9 +19,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -70,6 +70,9 @@ public class RecipeServiceImpl implements RecipeService {
         return new RecipeCreateResponseDto(recipe.getCreatedAt());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Transactional(readOnly = true)
     public Page<RecipeFindResponseDto> findsRecipe(RecipeListRequestDto requestDto, Pageable pageable) {
@@ -78,23 +81,33 @@ public class RecipeServiceImpl implements RecipeService {
                         new RecipeFindResponseDto(recipe.getId(), recipe.getTitle(), recipe.getMember().getLoginId(), recipe.getCreatedAt()));
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public RecipeDetailResponseDto findRecipeById(Long id) {
+        return RecipeDetailResponseDto.fromEntity(queryRecipeRepository.findById(id)
+                .orElseThrow(() -> new RecipeNotFoundException(id.toString())));
+    }
+
     private void saveFile(List<MultipartFile> multipartFiles, Long id) {
-        File uploadFolder = new File(path, id.toString());
-        if(!uploadFolder.exists()) {
-            uploadFolder.mkdirs();
-        }
-        for(MultipartFile uploadFile: multipartFiles) {
-            log.info("fileName: {}", uploadFile.getOriginalFilename());
-            if(!Objects.requireNonNull(uploadFile.getContentType()).startsWith("image")) {
-                String originalName = uploadFile.getOriginalFilename();
-                String fileName = originalName.substring(originalName.lastIndexOf("\\") + 1);
-                Path savePath = Paths.get(path + "_" + fileName);
-                try {
-                    uploadFile.transferTo(savePath);
-                } catch (Exception e) {
-                    e.printStackTrace();
+        try {
+            Path downloadPath = Paths.get(path + id);
+            Files.createDirectory(downloadPath);
+
+            // 파일 저장
+            for (MultipartFile file : multipartFiles) {
+                if (Objects.requireNonNull(file.getContentType()).startsWith("image")) {
+                    String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+                    String extension = StringUtils.getFilenameExtension(filename);
+                    String storedFilename = id + "." + extension;
+                    Path filePath = downloadPath.resolve(storedFilename);
+                    file.transferTo(filePath.toFile());
                 }
             }
+        }catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
