@@ -7,6 +7,7 @@ import com.coockcoock.shop.member.exception.LoginIdExistsException;
 import com.coockcoock.shop.member.exception.MemberNotFoundException;
 import com.coockcoock.shop.member.exception.PasswordNotMatchException;
 import com.coockcoock.shop.recipe.exception.RecipeNotFoundException;
+import com.coockcoock.shop.recipe.exception.RecipeUpdaterNotPermissionException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -47,6 +48,17 @@ public class ErrorAdvice {
                 .success(false)
                 .errorDto(CommonErrorDto.builder()
                         .status(400)
+                        .message(e.getMessage())
+                        .build())
+                .build();
+    }
+
+    @ExceptionHandler(value = {RecipeUpdaterNotPermissionException.class})
+    public CommonResponseDto<?> forbidden(Exception e) {
+        return CommonResponseDto.builder()
+                .success(false)
+                .errorDto(CommonErrorDto.builder()
+                        .status(403)
                         .message(e.getMessage())
                         .build())
                 .build();

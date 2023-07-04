@@ -19,6 +19,8 @@ public interface RecipeService {
      * @return
      */
     RecipeCreateResponseDto create(RecipeCreateRequestDto requestDto, String token);
+    RecipeUpdateResponseDto update(Long id, RecipeUpdateRequestDto requestDto, String token);
+    void delete(Long id, String token);
 
     /**
      * 게시물 리스트 반환

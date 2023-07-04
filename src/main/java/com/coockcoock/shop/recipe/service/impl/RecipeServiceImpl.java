@@ -8,6 +8,7 @@ import com.coockcoock.shop.member.repository.QueryMemberRepository;
 import com.coockcoock.shop.recipe.dto.*;
 import com.coockcoock.shop.recipe.entity.Recipe;
 import com.coockcoock.shop.recipe.exception.RecipeNotFoundException;
+import com.coockcoock.shop.recipe.exception.RecipeUpdaterNotPermissionException;
 import com.coockcoock.shop.recipe.repository.QueryRecipeRepository;
 import com.coockcoock.shop.recipe.repository.RecipeRepository;
 import com.coockcoock.shop.recipe.service.RecipeService;
@@ -23,9 +24,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -70,6 +73,53 @@ public class RecipeServiceImpl implements RecipeService {
         return new RecipeCreateResponseDto(recipe.getCreatedAt());
     }
 
+    @Transactional
+    @Override
+    public RecipeUpdateResponseDto update(Long id, RecipeUpdateRequestDto requestDto, String token) {
+        Member member = queryMemberRepository.findMemberByLoginId(jwtUtil.getLoginId(token.split(" ")[1].trim())).orElseThrow(
+                () -> new MemberNotFoundException(jwtUtil.getLoginId(token))
+        );
+
+        Recipe recipe = queryRecipeRepository.findById(id).orElseThrow(() -> new RecipeNotFoundException(id.toString()));
+
+        checkWriter(member.getLoginId(), recipe.getMember().getLoginId());
+        recipe.update(requestDto);
+
+        foodIngredientService.deleteByRecipeId(id);
+
+        if(Objects.nonNull(requestDto.getIngredientList())) {
+            foodIngredientService.save(recipe, queryIngredientService.findsById(requestDto.getIngredientList()), requestDto.getAmounts());
+        }
+        try{
+            deleteFilesInFolder(id);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if(Objects.nonNull(requestDto.getUpLoadFile()) && requestDto.getUpLoadFile().size() > 0) {
+            saveFile(requestDto.getUpLoadFile(), recipe.getId());
+        }
+        return new RecipeUpdateResponseDto(LocalDateTime.now());
+    }
+
+    @Override
+    public void delete(Long id, String token) {
+        Member member = queryMemberRepository.findMemberByLoginId(jwtUtil.getLoginId(token.split(" ")[1].trim())).orElseThrow(
+                () -> new MemberNotFoundException(jwtUtil.getLoginId(token))
+        );
+
+        Recipe recipe = queryRecipeRepository.findById(id).orElseThrow(() -> new RecipeNotFoundException(id.toString()));
+
+        checkWriter(member.getLoginId(), recipe.getMember().getLoginId());
+        foodIngredientService.deleteByIngredientId(id);
+        recipeRepository.deleteById(id);
+        try{
+            deleteFilesInFolder(id);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -87,8 +137,9 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     @Transactional(readOnly = true)
     public RecipeDetailResponseDto findRecipeById(Long id) {
-        return RecipeDetailResponseDto.fromEntity(queryRecipeRepository.findById(id)
-                .orElseThrow(() -> new RecipeNotFoundException(id.toString())));
+        Recipe recipe = queryRecipeRepository.findById(id).orElseThrow(() -> new RecipeNotFoundException(id.toString()));
+        return RecipeDetailResponseDto.fromEntity(recipe, foodIngredientService.findByRecipeId(id));
+
     }
 
     private void saveFile(List<MultipartFile> multipartFiles, Long id) {
@@ -108,6 +159,27 @@ public class RecipeServiceImpl implements RecipeService {
             }
         }catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    private void deleteFilesInFolder(Long id) throws IOException {
+        Path folder = Paths.get(path+id);
+
+        if (Files.exists(folder) && Files.isDirectory(folder)) {
+            try (var fileStream = Files.walk(folder)
+                    .filter(Files::isRegularFile)) {
+                fileStream.forEach(file -> {
+                    try {
+                        Files.delete(file);
+                    } catch (IOException e) {
+                        // 예외 처리
+                    }
+                });
+            }
+        }
+    }
+    private void checkWriter(String writer, String updater) {
+        if(!writer.equals(updater)) {
+            throw new RecipeUpdaterNotPermissionException(writer, updater);
         }
     }
 }

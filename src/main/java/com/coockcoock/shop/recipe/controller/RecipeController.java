@@ -28,6 +28,17 @@ public class RecipeController {
                 .build();
     }
 
+    @PostMapping("/{id}")
+    public CommonResponseDto<RecipeUpdateResponseDto> update(
+            @PathVariable(name = "id")Long id,
+            @ModelAttribute RecipeUpdateRequestDto requestDto,
+            HttpServletRequest request) {
+        return CommonResponseDto.<RecipeUpdateResponseDto>builder()
+                .success(true)
+                .data(recipeService.update(id, requestDto, request.getHeader(HttpHeaders.AUTHORIZATION)))
+                .build();
+    }
+
     @GetMapping
     public CommonResponseDto<Page<RecipeFindResponseDto>> finds(RecipeListRequestDto requestDto, @PageableDefault Pageable pageable) {
         return CommonResponseDto.<Page<RecipeFindResponseDto>>builder()
@@ -42,6 +53,14 @@ public class RecipeController {
                 .success(true)
                 .data(recipeService.findRecipeById(id))
                 .errorDto(null)
+                .build();
+    }
+
+    @DeleteMapping("/{id}")
+    public CommonResponseDto<Void> delete(@PathVariable(name = "id")Long id, HttpServletRequest request) {
+        recipeService.delete(id, request.getHeader(HttpHeaders.AUTHORIZATION));
+        return CommonResponseDto.<Void>builder()
+                .success(true)
                 .build();
     }
 }

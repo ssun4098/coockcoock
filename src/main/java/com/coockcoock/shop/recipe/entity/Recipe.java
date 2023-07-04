@@ -1,6 +1,7 @@
 package com.coockcoock.shop.recipe.entity;
 
 import com.coockcoock.shop.member.domain.Member;
+import com.coockcoock.shop.recipe.dto.RecipeUpdateRequestDto;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -47,4 +48,9 @@ public class Recipe {
     @ManyToOne
     @JoinColumn(name = "writer_id")
     private Member member;
+
+    public void update(RecipeUpdateRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.cookery = requestDto.getCookery();
+    }
 }
