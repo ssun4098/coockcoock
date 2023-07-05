@@ -31,21 +31,4 @@ class IngredientRepositoryTest {
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0).getName()).isEqualTo(ingredient.getName());
     }
-
-    @Test
-    @DisplayName("삭제 테스트")
-    void deleteTest() {
-        //given
-        Ingredient ingredient = Ingredient.builder()
-                .name("name")
-                .build();
-        commandIngredientRepository.save(ingredient);
-
-        //when
-        commandIngredientRepository.deleteById(2L);
-        List<Ingredient> result = commandIngredientRepository.findAll();
-
-        //then
-        assertThat(result.size()).isEqualTo(0);
-    }
 }

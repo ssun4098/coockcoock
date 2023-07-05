@@ -15,11 +15,12 @@ public class CookieUtil {
      * @param content 쿠키에 담을 내용
      * @return 생성한 쿠키
      */
-    public Cookie createCookie(String name, String content) {
+    public Cookie createCookie(String name, String content, Long expire) {
         Cookie cookie = new Cookie(name, content);
-//        cookie.setHttpOnly(true);
-//        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
         cookie.setPath("/**");
+        cookie.setMaxAge(expire.intValue());
         return cookie;
     }
 

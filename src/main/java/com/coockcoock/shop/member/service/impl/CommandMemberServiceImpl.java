@@ -9,6 +9,7 @@ import com.coockcoock.shop.member.exception.PasswordNotMatchException;
 import com.coockcoock.shop.member.repository.CommonMemberRepository;
 import com.coockcoock.shop.member.repository.QueryMemberRepository;
 import com.coockcoock.shop.member.service.CommandMemberService;
+import com.coockcoock.shop.utils.CookieUtil;
 import com.coockcoock.shop.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +35,7 @@ public class CommandMemberServiceImpl implements CommandMemberService{
     private final RedisTemplate<String, String> redisTemplate;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final CookieUtil cookieUtil;
     @Value("${jwt.refreshKey}")
     private String refreshTokenKey;
     /**
@@ -93,9 +95,9 @@ public class CommandMemberServiceImpl implements CommandMemberService{
         Member member = queryMemberRepository.findMemberByLoginId(requestDto.getLoginId())
                 .orElseThrow(() -> new MemberNotFoundException("LoginId: " + requestDto.getLoginId()));
         passwordCheck(member, requestDto.getPassword());
-        redisTemplate.opsForValue().set(requestDto.getLoginId() + " " + refreshTokenKey, jwtUtil.refreshToken(member));
         redisTemplate.expire(requestDto.getLoginId() + " " + refreshTokenKey, 6, TimeUnit.HOURS);
-        return new LoginResponseDto(jwtUtil.creatJwt(member));
+        Long exp = System.currentTimeMillis() + 1000L * 60 * 60;
+        return new LoginResponseDto(cookieUtil.createCookie("token", jwtUtil.creatJwt(member, exp), exp));
     }
 
     /**

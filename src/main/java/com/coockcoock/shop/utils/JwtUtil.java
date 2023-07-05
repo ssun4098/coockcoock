@@ -22,7 +22,7 @@ public class JwtUtil {
 
     @Value("${jwt.secretKey}")
     private String secretKey;
-    private final Long exp = 1000L * 60 * 60; // 1시간
+    //private final Long exp = 1000L * 60 * 60; // 1시간
 
     /**
      *  JWT에서 로그인 아이디 추출 메서드
@@ -45,14 +45,14 @@ public class JwtUtil {
      * @return JWT
      * @since 23-04-28
      */
-    public String creatJwt(Member member) {
+    public String creatJwt(Member member, Long exp) {
         Claims claims = Jwts.claims().setSubject(member.getLoginId());
         claims.put("grade", member.getGrade());
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + exp))
+                .setExpiration(new Date(exp))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
@@ -71,7 +71,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + exp * 6))
+                .setExpiration(new Date(System.currentTimeMillis() + 6))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
